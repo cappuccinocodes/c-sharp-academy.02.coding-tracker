@@ -1,6 +1,8 @@
 ﻿using Microsoft.Data.Sqlite;
 using System;
 using System.IO;
+using System.Configuration;
+using System.Collections.Specialized;
 
 namespace CodeTracker1
 {
@@ -8,27 +10,17 @@ namespace CodeTracker1
     {
         static void Main(string[] args)
         {
-            string path = @"C:\Projects\Tutorials\CodeTracker\CodeTracker1\d4.sqlite";
-
-            //bool dbExists = File.Exists(path);
+            string databasePath = ConfigurationManager.AppSettings.Get("DatabasePathEB");
+            Console.WriteLine("Hi there! I'm checking if database exists");
+            bool dbExists = File.Exists(databasePath);
             
-
-            if (true)
-                //Console.WriteLine("Database Exists");
-                using (var connection = new SqliteConnection("Data Source=C:\\Projects\\Tutorials\\CodeTracker\\CodeTracker1\\d4.sqlite"))
-                {
-                   
-                        connection.Open();
-                        var tableCmd = connection.CreateCommand();
-                        tableCmd.CommandText = "create table bolas (name varchar(20), score int) ";
-                        tableCmd.ExecuteNonQuery();
-                        connection.Close();
-                 
-                    
-                    Console.WriteLine("Table Created");
-                }
+            if (!dbExists)
+            {
+                Console.WriteLine("Database doesn't exist, creating one...");
+                DatabaseManager.CreateDatabase(databasePath);
+            }
             else
-                DatabaseManager.CreateDatabase(path);
+                Console.WriteLine("Ready for next task");
             return;
         }
     }

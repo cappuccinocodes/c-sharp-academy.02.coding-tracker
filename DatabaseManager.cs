@@ -12,15 +12,18 @@ namespace CodeTracker1
     {
         public static void CreateDatabase(string path)
         {
-            File.Create("C:\\Projects\\Tutorials\\CodeTracker\\CodeTracker1\\db4.sqlite");
-            Console.WriteLine("Database Created");
+            File.Create(path);
 
-            using (var connection = new SqliteConnection("Data Source=db4.sqlite"))
+            using (var connection = new SqliteConnection(path))
             {
+
                 connection.Open();
                 var tableCmd = connection.CreateCommand();
-                tableCmd.CommandText = "CREATE TABLE Coding ('Id' INTEGER,'Date'INTEGER 'Duration'  INTEGER); ";
+                tableCmd.CommandText = "create table coding (Id INT, date INT, duration INT) ";
                 tableCmd.ExecuteNonQuery();
+                connection.Close();
+
+
                 Console.WriteLine("Table Created");
             }
         }
