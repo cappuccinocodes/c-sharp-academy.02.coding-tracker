@@ -12,18 +12,14 @@ namespace CodeTracker1
     {
         public static void CreateDatabase(string path)
         {
-            File.Create(path);
-
             using (var connection = new SqliteConnection(path))
             {
-
                 connection.Open();
                 var tableCmd = connection.CreateCommand();
                 tableCmd.CommandText = "create table coding (Id INT, date INT, duration INT) ";
                 tableCmd.ExecuteNonQuery();
                 connection.Close();
-
-
+                
                 Console.WriteLine("Table Created");
             }
         }

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CodeTracker1": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\study\\CodeTracker1"
+    }
+  }
+}
