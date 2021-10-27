@@ -41,7 +41,7 @@ namespace CodeTracker1
                         Update();
                         break;
                     case 5:
-                        Reports.GenerateReport();
+                        Reports.GetReportCommand();
                         break;
                     default:
                         Console.WriteLine("Invalid Command.");
@@ -74,45 +74,6 @@ namespace CodeTracker1
             Console.WriteLine($"Your time was logged: date({date}), duration({duration}).");
 
             GetUserCommand();
-        }
-
-        internal static long GetDateInput()
-        {
-            Console.WriteLine("Please insert the date: (Format: dd-mm-yy)");
-            string dateInput = Console.ReadLine();
-            try
-            {
-                var parsedDate = DateTime.ParseExact(dateInput, "dd-MM-yy", new CultureInfo("en-US"));
-
-                long date = parsedDate.Ticks;
-                return date;
-            }
-            catch (Exception e)
-            {
-                string error = e.Message;
-                Console.WriteLine("Not a valid date.");
-                GetDateInput();
-                throw;
-            }
-        }
-
-        internal static long GetDurationInput()
-        {
-            Console.WriteLine("Please insert the duration: (Format: hh:mm)");
-            string dateInput = Console.ReadLine();
-            try
-            {
-                var parsedDuration = TimeSpan.Parse(dateInput);
-                long date = parsedDuration.Ticks;
-                return date;
-            }
-            catch (Exception e)
-            {
-                string error = e.Message;
-                Console.WriteLine("Not a valid date.");
-                GetDurationInput();
-                throw;
-            }
         }
 
         internal static void Delete()
@@ -199,6 +160,45 @@ namespace CodeTracker1
             Console.WriteLine($"Your time was logged: date({date}), duration({duration}).");
 
             GetUserCommand();
+        }
+
+        internal static long GetDateInput()
+        {
+            Console.WriteLine("Please insert the date: (Format: dd-mm-yy)");
+            string dateInput = Console.ReadLine();
+            try
+            {
+                var parsedDate = DateTime.ParseExact(dateInput, "dd-MM-yy", new CultureInfo("en-US"));
+
+                long date = parsedDate.Ticks;
+                return date;
+            }
+            catch (Exception e)
+            {
+                string error = e.Message;
+                Console.WriteLine("Not a valid date.");
+                GetDateInput();
+                throw;
+            }
+        }
+
+        internal static long GetDurationInput()
+        {
+            Console.WriteLine("Please insert the duration: (Format: hh:mm)");
+            string dateInput = Console.ReadLine();
+            try
+            {
+                var parsedDuration = TimeSpan.Parse(dateInput);
+                long date = parsedDuration.Ticks;
+                return date;
+            }
+            catch (Exception e)
+            {
+                string error = e.Message;
+                Console.WriteLine("Not a valid date.");
+                GetDurationInput();
+                throw;
+            }
         }
     }
 }
