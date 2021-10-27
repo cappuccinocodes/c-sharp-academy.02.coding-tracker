@@ -20,8 +20,9 @@ namespace CodeTracker1
                 DatabaseManager.CreateDatabase();
             }
             else
+            {
                 CodingController.GetUserCommand();
-            return;
+            }
         }
     }
 }
