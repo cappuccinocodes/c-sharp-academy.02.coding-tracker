@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,9 +11,10 @@ namespace CodeTracker1
 {
     class DatabaseManager
     {
-        public static void CreateDatabase(string path)
+        public static void CreateDatabase()
         {
-            using (var connection = new SqliteConnection(path))
+            string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
+            using (var connection = new SqliteConnection(connectionString))
             {
                 connection.Open();
                 var tableCmd = connection.CreateCommand();

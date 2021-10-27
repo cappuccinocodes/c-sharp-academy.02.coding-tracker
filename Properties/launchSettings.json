@@ -2,7 +2,7 @@
   "profiles": {
     "CodeTracker1": {
       "commandName": "Project",
-      "workingDirectory": "C:\\study\\CodeTracker1"
+      "workingDirectory": "C:\\Projects\\Tutorials\\CodeTracker\\CodeTracker1"
     }
   }
 }
