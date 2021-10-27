@@ -18,7 +18,8 @@ namespace CodeTracker1
             {
                 connection.Open();
                 var tableCmd = connection.CreateCommand();
-                tableCmd.CommandText = $"create table coding ('Id' INTEGER NOT NULL, 'Date' INTEGER, 'Duration' INTEGER, PRIMARY KEY('Id' AUTOINCREMENT)  ) ";
+                tableCmd.CommandText = 
+                    $"create table coding (Id INTEGER PRIMARY KEY AUTOINCREMENT, Date INTEGER, 'Duration' INTEGER ) ";
                 tableCmd.ExecuteNonQuery();
                 connection.Close();
                 

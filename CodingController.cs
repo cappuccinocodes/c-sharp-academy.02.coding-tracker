@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Globalization;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
@@ -65,12 +66,14 @@ namespace CodeTracker1
             string dateInput = Console.ReadLine();
             try
             {
-                var parsedDate = DateTime.Parse(dateInput);
+                var parsedDate = DateTime.ParseExact(dateInput, "dd-MM-yy", new CultureInfo("en-US"));
+
                 long date = parsedDate.Ticks;
                 return date;
             }
-            catch 
+            catch (Exception e)
             {
+                string error = e.Message;
                 Console.WriteLine("Not a valid date.");
                 GetDateInput();
                 throw;
@@ -87,8 +90,9 @@ namespace CodeTracker1
                 long date = parsedDuration.Ticks;
                 return date;
             }
-            catch
+            catch (Exception e)
             {
+                string error = e.Message;
                 Console.WriteLine("Not a valid date.");
                 GetDurationInput();
                 throw;
@@ -101,7 +105,7 @@ namespace CodeTracker1
             {
                 connection.Open();
                 var tableCmd = connection.CreateCommand();
-                tableCmd.CommandText = $"INSERT INTO coding VALUES ({date}, {duration})";
+                tableCmd.CommandText = $"INSERT INTO coding (date, duration) VALUES ({date}, {duration})";
                 tableCmd.ExecuteNonQuery();
                 connection.Close();
 
