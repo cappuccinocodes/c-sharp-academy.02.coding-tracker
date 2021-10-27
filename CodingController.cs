@@ -30,9 +30,10 @@ namespace CodeTracker1
                         break;
                 }
             }
-            catch
+            catch (Exception e)
             {
-                Console.WriteLine("You need to insert a command");
+                Console.WriteLine(e.Message);
+                throw;
             }
         }
 
@@ -96,6 +97,16 @@ namespace CodeTracker1
 
         internal static void PersistData(long date, long duration)
         {
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                var tableCmd = connection.CreateCommand();
+                tableCmd.CommandText = $"INSERT INTO coding VALUES ({date}, {duration})";
+                tableCmd.ExecuteNonQuery();
+                connection.Close();
+
+                Console.WriteLine("Table Created");
+            }
             Console.WriteLine($"Your time was logged: date({date}), duration({duration}).");
         }
     }
