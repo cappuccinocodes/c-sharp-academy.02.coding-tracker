@@ -198,7 +198,7 @@ namespace CodeTracker1
             TimeSpan timeSpan;
 
             string durationInput = Console.ReadLine();
-            bool success = TimeSpan.TryParseExact(durationInput, "HH:mm", CultureInfo.InvariantCulture, out timeSpan);
+            bool success = TimeSpan.TryParseExact(durationInput, "h\\:mm", CultureInfo.InvariantCulture, out timeSpan);
 
             if (success)
             {
