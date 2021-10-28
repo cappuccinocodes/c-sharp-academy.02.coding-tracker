@@ -44,7 +44,7 @@ namespace CodeTracker1
                         Reports.GetReportCommand();
                         break;
                     default:
-                        Console.WriteLine("Invalid Command.");
+                        Console.WriteLine("\nInvalid Command. Please type a number from 0 to 5.\n");
                         GetUserCommand();
                         break;
                 }
@@ -52,7 +52,7 @@ namespace CodeTracker1
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                throw;
+                GetUserCommand();
             }
         }
 
@@ -61,17 +61,25 @@ namespace CodeTracker1
             long date = GetDateInput();
             long duration = GetDurationInput();
 
-            using (var connection = new SqliteConnection(connectionString))
+            try
             {
-                connection.Open();
-                var tableCmd = connection.CreateCommand();
-                tableCmd.CommandText = $"INSERT INTO coding (date, duration) VALUES ({date}, {duration})";
-                tableCmd.ExecuteNonQuery();
-                connection.Close();
+                using (var connection = new SqliteConnection(connectionString))
+                {
+                    connection.Open();
+                    var tableCmd = connection.CreateCommand();
+                    tableCmd.CommandText = $"INSERT INTO coding (date, duration) VALUES ({date}, {duration})";
+                    tableCmd.ExecuteNonQuery();
+                    connection.Close();
 
-                Console.WriteLine("Table Created");
+                }
             }
-            Console.WriteLine($"Your time was logged: date({date}), duration({duration}).");
+            catch
+            {
+                Console.WriteLine("\nPlease enter date with correct format.\n");
+                GetUserCommand();
+            }
+
+            Console.WriteLine($"\n\nYour time was logged: date({date}), duration({duration}).\n\n");
 
             GetUserCommand();
         }
@@ -132,9 +140,12 @@ namespace CodeTracker1
                 }
                 reader.Close();
 
+                Console.WriteLine("\n\n");
+
                 ConsoleTableBuilder
                     .From(tableData)
                     .ExportAndWriteLine();
+                Console.WriteLine("\n\n");
 
                 GetUserCommand();
             }
@@ -165,40 +176,44 @@ namespace CodeTracker1
         internal static long GetDateInput()
         {
             Console.WriteLine("Please insert the date: (Format: dd-mm-yy)");
+            DateTime result;
+
             string dateInput = Console.ReadLine();
-            try
+            bool success = DateTime.TryParseExact(dateInput, "dd-MM-yy", new CultureInfo("en-US"), DateTimeStyles.None, out result);
+
+            if (success)
             {
                 var parsedDate = DateTime.ParseExact(dateInput, "dd-MM-yy", new CultureInfo("en-US"));
-
                 long date = parsedDate.Ticks;
                 return date;
             }
-            catch (Exception e)
-            {
-                string error = e.Message;
-                Console.WriteLine("Not a valid date.");
-                GetDateInput();
-                throw;
-            }
+
+            Console.WriteLine("\n\nNot a valid date. Please insert the date with the format: dd-mm-yy\n\n");
+            return GetDateInput();
         }
 
         internal static long GetDurationInput()
         {
             Console.WriteLine("Please insert the duration: (Format: hh:mm)");
-            string dateInput = Console.ReadLine();
-            try
+            TimeSpan timeSpan;
+
+            string durationInput = Console.ReadLine();
+            bool success = TimeSpan.TryParseExact(durationInput, "HH:mm", CultureInfo.InvariantCulture, out timeSpan);
+
+            if (success)
             {
-                var parsedDuration = TimeSpan.Parse(dateInput);
+                var parsedDuration = TimeSpan.Parse(durationInput);
                 long date = parsedDuration.Ticks;
+                if (date < 0)
+                {
+                    Console.WriteLine("Negative Time Not allowed\n\n");
+                    GetDurationInput();
+                }
                 return date;
             }
-            catch (Exception e)
-            {
-                string error = e.Message;
-                Console.WriteLine("Not a valid date.");
-                GetDurationInput();
-                throw;
-            }
+
+            Console.WriteLine("Not a valid time.");
+            return GetDurationInput();
         }
     }
 }
