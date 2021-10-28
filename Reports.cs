@@ -46,11 +46,14 @@ namespace CodeTracker1
             Console.WriteLine("Please type year (format: YYYY)");
             int year = Convert.ToInt32(Console.ReadLine());
 
+            long start = HelperMethods.CalculateMonth(year, month).start;
+            long end = HelperMethods.CalculateMonth(year, month).end;
+
             using (var connection = new SqliteConnection(connectionString))
             {
                 connection.Open();
                 var tableCmd = connection.CreateCommand();
-                tableCmd.CommandText = "SELECT * FROM coding";
+                tableCmd.CommandText = $"SELECT * FROM coding WHERE Date BETWEEN {start} AND {end}";
 
                 List<Coding> tableData = new List<Coding>();
 

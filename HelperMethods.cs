@@ -8,13 +8,16 @@ namespace CodeTracker1
 {
     class HelperMethods
     {
-        public static long CalculateMonth(int month, int year)
+        public static (long start, long end) CalculateMonth(int year, int month)
         {
-            DateTime yearMonth = new DateTime(year, month, 01);
+            int monthEndInt = month + 1;
+            DateTime monthStart = new DateTime(year, month, 1);
+            DateTime monthEnd = new DateTime(year, monthEndInt, 1);
 
-            long monthTicks = yearMonth.Ticks;
+            long monthStartTicks = monthStart.Ticks;
+            long monthEndTicks = monthEnd.Ticks;
 
-            return monthTicks;
+            return (monthStartTicks, monthEndTicks);
         }
     }
 }
