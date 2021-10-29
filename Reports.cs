@@ -15,53 +15,37 @@ namespace CodeTracker1
             Console.WriteLine("\n\nWhat would you like to do?");
             Console.WriteLine("Type 0 to return to Main Menu.");
             Console.WriteLine("Type 1 to generate report by month.\n\n");
-            try
+
+
+            string commandInput = Console.ReadLine();
+
+            if (string.IsNullOrEmpty(commandInput))
             {
-                int command = Convert.ToInt32(Console.ReadLine());
-                switch (command)
-                {
-                    case 0:
-                        CodingController.GetUserCommand();
-                        break;
-                    case 1:
-                        ReportByMonth();
-                        break;
-                    default:
-                        Console.WriteLine("\n\nInvalid Command.\n\n");
-                        break;
-                }
+                Console.WriteLine("\nInvalid Command. Please choose an option\n");
+                GetReportCommand();
             }
-            catch (Exception e)
+
+            int command = Convert.ToInt32(commandInput);
+
+            switch (command)
             {
-                Console.WriteLine(e.Message);
-                throw;
+                case 0:
+                    CodingController.GetUserCommand();
+                    break;
+                case 1:
+                    ReportByMonth();
+                    break;
+                default:
+                    Console.WriteLine("\n\nInvalid Command.\n\n");
+                    GetReportCommand();
+                    break;
             }
         }
 
         internal static void ReportByMonth()
         {
-            while (true)
-            {
-                Console.WriteLine($"\n\nPlease type month number.\n\n");
-                int month = Convert.ToInt32(Console.ReadLine());
-                if (!(month > 0 && month < 13))
-                {
-                    Console.WriteLine("\n\nInvalid Month. Please try Again.\n\n");
-                    return;
-                } else
-                {
-                    break;
-                }
-            }
-
-
-            Console.WriteLine("\n\nPlease type year (format: YYYY).\n\n");
-            int year = Convert.ToInt32(Console.ReadLine());
-            if (!(year > 1970 && year < 2099))
-            {
-                Console.WriteLine("\n\nInvalid Year. Please try again.\n\n");
-                year = Convert.ToInt32(Console.ReadLine());
-            }
+            int month = GetMonthInput();
+            int year = GetYearInput();
 
             long start = HelperMethods.CalculateMonth(year, month).start;
             long end = HelperMethods.CalculateMonth(year, month).end;
@@ -78,8 +62,6 @@ namespace CodeTracker1
 
                 if (reader.HasRows)
                 {
-                    try
-                    {
                         while (reader.Read())
                         {
                             tableData.Add(
@@ -90,12 +72,6 @@ namespace CodeTracker1
                                     Duration = new TimeSpan(reader.GetInt64(2)).ToString()
                                 });
                         }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.Message);
-                        CodingController.GetUserCommand();
-                    }
                 }
                 else
                 {
@@ -110,6 +86,61 @@ namespace CodeTracker1
 
                 CodingController.GetUserCommand();
             }
+        }
+
+        private static int GetYearInput()
+        {
+            Console.WriteLine($"\n\nPlease type year number.\n\n");
+
+            string yearInput = Console.ReadLine();
+
+            while (string.IsNullOrEmpty(yearInput))
+            {
+                Console.WriteLine($"\n\nInput can't be empty.\n\n");
+                yearInput = Console.ReadLine();
+
+                if (!string.IsNullOrEmpty(yearInput)) break;
+            }
+
+            int year = Convert.ToInt32(Console.ReadLine());
+
+            while (!(year > 1970 && year < 2099))
+            {
+                Console.WriteLine("\n\nInvalid Year. Please try again.\n\n");
+                year = Convert.ToInt32(Console.ReadLine());
+
+                if (year > 1970 && year < 2099)
+                    break;
+            }
+            return year;
+        }
+
+        private static int GetMonthInput()
+        {
+            Console.WriteLine($"\n\nPlease type month number.\n\n");
+
+            string monthInput = Console.ReadLine();
+
+            while (string.IsNullOrEmpty(monthInput))
+            {
+                Console.WriteLine($"\n\nInput can't be empty.\n\n");
+                monthInput = Console.ReadLine();
+
+                if (!string.IsNullOrEmpty(monthInput)) break;
+            }
+
+            int month = Convert.ToInt32(Console.ReadLine());
+
+            while (!(month > 0 && month < 13))
+            {
+                Console.WriteLine("\n\nInvalid Month. Please try Again.\n\n");
+                month = Convert.ToInt32(Console.ReadLine());
+
+                if (month > 0 && month < 13)
+                    break;
+            }
+
+            return month;
         }
     }
 }
