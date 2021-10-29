@@ -102,7 +102,7 @@ namespace CodeTracker1
                 if (!string.IsNullOrEmpty(yearInput)) break;
             }
 
-            int year = Convert.ToInt32(Console.ReadLine());
+            int year = Convert.ToInt32(yearInput);
 
             while (!(year > 1970 && year < 2099))
             {
@@ -129,7 +129,7 @@ namespace CodeTracker1
                 if (!string.IsNullOrEmpty(monthInput)) break;
             }
 
-            int month = Convert.ToInt32(Console.ReadLine());
+            int month = Convert.ToInt32(monthInput);
 
             while (!(month > 0 && month < 13))
             {
