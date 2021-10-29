@@ -12,9 +12,9 @@ namespace CodeTracker1
 
         public static void GetReportCommand()
         {
-            Console.WriteLine("What would you like to do?");
+            Console.WriteLine("\n\nWhat would you like to do?");
             Console.WriteLine("Type 0 to return to Main Menu.");
-            Console.WriteLine("Type 1 to generate report by month");
+            Console.WriteLine("Type 1 to generate report by month.\n\n");
             try
             {
                 int command = Convert.ToInt32(Console.ReadLine());
@@ -27,7 +27,7 @@ namespace CodeTracker1
                         ReportByMonth();
                         break;
                     default:
-                        Console.WriteLine("Invalid Command.");
+                        Console.WriteLine("\n\nInvalid Command.\n\n");
                         break;
                 }
             }
@@ -40,11 +40,28 @@ namespace CodeTracker1
 
         internal static void ReportByMonth()
         {
-            Console.WriteLine("Please type month number");
-            int month = Convert.ToInt32(Console.ReadLine());
+            while (true)
+            {
+                Console.WriteLine($"\n\nPlease type month number.\n\n");
+                int month = Convert.ToInt32(Console.ReadLine());
+                if (!(month > 0 && month < 13))
+                {
+                    Console.WriteLine("\n\nInvalid Month. Please try Again.\n\n");
+                    return;
+                } else
+                {
+                    break;
+                }
+            }
 
-            Console.WriteLine("Please type year (format: YYYY)");
+
+            Console.WriteLine("\n\nPlease type year (format: YYYY).\n\n");
             int year = Convert.ToInt32(Console.ReadLine());
+            if (!(year > 1970 && year < 2099))
+            {
+                Console.WriteLine("\n\nInvalid Year. Please try again.\n\n");
+                year = Convert.ToInt32(Console.ReadLine());
+            }
 
             long start = HelperMethods.CalculateMonth(year, month).start;
             long end = HelperMethods.CalculateMonth(year, month).end;
@@ -77,17 +94,21 @@ namespace CodeTracker1
                     catch (Exception e)
                     {
                         Console.WriteLine(e.Message);
+                        CodingController.GetUserCommand();
                     }
                 }
                 else
                 {
-                    Console.WriteLine("No rows found.");
+                    Console.WriteLine("\n\nNo rows found.\n\n");
+                    CodingController.GetUserCommand();
                 }
                 reader.Close();
 
                 ConsoleTableBuilder
                     .From(tableData)
                     .ExportAndWriteLine();
+
+                CodingController.GetUserCommand();
             }
         }
     }
