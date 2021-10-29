@@ -11,17 +11,17 @@ namespace CodeTracker1
         static void Main(string[] args)
         {
             string databasePath = ConfigurationManager.AppSettings.Get("DatabasePath");
-            Console.WriteLine("Hi there! I'm checking if database exists\n\n");
+            Console.WriteLine("\n\nHi there! I'm checking if database exists\n\n");
             bool dbExists = File.Exists(databasePath);
             
             if (!dbExists)
             {
-                Console.WriteLine("Database doesn't exist, creating one...\n\n");
+                Console.WriteLine("\n\nDatabase doesn't exist, creating one...\n\n");
                 DatabaseManager.CreateDatabase();
             }
             else
             {
-                Console.WriteLine("Database exists...\n\n");
+                Console.WriteLine("\n\nDatabase exists...\n\n");
                 CodingController.GetUserCommand();
             }
         }

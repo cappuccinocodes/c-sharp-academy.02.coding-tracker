@@ -13,13 +13,13 @@ namespace CodeTracker1
         static readonly string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
         internal static void GetUserCommand()
         {
-            Console.WriteLine("What would you like to do?");
+            Console.WriteLine("\n\nWhat would you like to do?");
             Console.WriteLine("Type 0 to Close Application.");
             Console.WriteLine("Type 1 to View All Records.");
             Console.WriteLine("Type 2 to Insert Records.");
             Console.WriteLine("Type 3 to Delete Records.");
             Console.WriteLine("Type 4 to Update Records.");
-            Console.WriteLine("Type 5 to Generate Reports.");
+            Console.WriteLine("Type 5 to Generate Reports.\n\n");
             try
             {
                 int command = Convert.ToInt32(Console.ReadLine());
@@ -70,7 +70,6 @@ namespace CodeTracker1
                     tableCmd.CommandText = $"INSERT INTO coding (date, duration) VALUES ({date}, {duration})";
                     tableCmd.ExecuteNonQuery();
                     connection.Close();
-
                 }
             }
             catch
@@ -79,14 +78,17 @@ namespace CodeTracker1
                 GetUserCommand();
             }
 
-            Console.WriteLine($"\n\nYour time was logged: date({date}), duration({duration}).\n\n");
+            string inputDate = new DateTime(date).ToString("dd-MM-yy");
+            string inputDuration = new DateTime(duration).ToString("HH:mm");
+
+            Console.WriteLine($"\n\nYour time was logged. Date: {inputDate}; Duration: {inputDuration}.\n\n");
 
             GetUserCommand();
         }
 
         internal static void Delete()
         {
-            Console.WriteLine("Please type Id of the record would like to delete");
+            Console.WriteLine("\n\nPlease type Id of the record would like to delete.\n\n");
             string inputId = Console.ReadLine();
             var Id = Int32.Parse(inputId);
             using (var connection = new SqliteConnection(connectionString))
@@ -94,10 +96,16 @@ namespace CodeTracker1
                 connection.Open();
                 var tableCmd = connection.CreateCommand();
                 tableCmd.CommandText = $"DELETE from coding WHERE Id = '{Id}'";
-                tableCmd.ExecuteNonQuery();
-                connection.Close();
+                int rowCount = tableCmd.ExecuteNonQuery();
+
+                string message =
+                    rowCount == 0 ? 
+                    $"\n\nRecord with Id {Id} doesn't exist.\n\n" : 
+                    $"\n\nRecord with Id {Id} was deleted.\n\n";
+
+                Console.WriteLine(message); 
+               
             }
-            Console.WriteLine($"Record with Id {Id} was deleted.");
             GetUserCommand();
         }
 
@@ -110,7 +118,6 @@ namespace CodeTracker1
                 tableCmd.CommandText = "SELECT * FROM coding";
 
                 List<Coding> tableData = new List<Coding>();
-
 
                 SqliteDataReader reader = tableCmd.ExecuteReader();
 
@@ -153,32 +160,58 @@ namespace CodeTracker1
 
         internal static void Update()
         {
-            Console.WriteLine("Please type Id of the record would like to update");
+            Console.WriteLine("\n\nPlease type Id of the record would like to update. Type 0 to return to main manu.\n\n");
+
             string inputId = Console.ReadLine();
+
+            if (inputId == "0")
+            {
+                GetUserCommand();
+            }
+
             var Id = Int32.Parse(inputId);
-            long date = GetDateInput();
-            long duration = GetDurationInput();
 
             using (var connection = new SqliteConnection(connectionString))
             {
                 connection.Open();
+                var checkCmd = connection.CreateCommand();
+                checkCmd.CommandText = $"SELECT EXISTS(SELECT 1 FROM coding WHERE Id = {Id})";
+                int checkQuery = Convert.ToInt32(checkCmd.ExecuteScalar());
+                if (checkQuery == 0)
+                { 
+                    Console.WriteLine($"\n\nRecord with Id {Id} doesn't exist.\n\n");
+                    GetUserCommand();
+                }
+
+                long date = GetDateInput();
+                long duration = GetDurationInput();
+
                 var tableCmd = connection.CreateCommand();
                 tableCmd.CommandText = $"UPDATE coding SET date = {date}, duration = {duration} WHERE Id = {Id}";
                 tableCmd.ExecuteNonQuery();
+
+                string inputDate = new DateTime(date).ToString("dd-MM-yy");
+                string inputDuration = new DateTime(duration).ToString("HH:mm");
+
+                Console.WriteLine($"\n\nYour time was logged: date({inputDate}), duration({inputDuration}).\n\n");
                 connection.Close();
             }
-
-            Console.WriteLine($"Your time was logged: date({date}), duration({duration}).");
 
             GetUserCommand();
         }
 
         internal static long GetDateInput()
         {
-            Console.WriteLine("Please insert the date: (Format: dd-mm-yy)");
+            Console.WriteLine("\n\nPlease insert the date: (Format: dd-mm-yy). Type 0 to return to main manu.\n\n");
             DateTime result;
 
             string dateInput = Console.ReadLine();
+
+            if (dateInput == "0")
+            {
+                GetUserCommand();
+            }
+
             bool success = DateTime.TryParseExact(dateInput, "dd-MM-yy", new CultureInfo("en-US"), DateTimeStyles.None, out result);
 
             if (success)
@@ -188,16 +221,21 @@ namespace CodeTracker1
                 return date;
             }
 
-            Console.WriteLine("\n\nNot a valid date. Please insert the date with the format: dd-mm-yy\n\n");
+            Console.WriteLine("\n\nNot a valid date. Please insert the date with the format: dd-mm-yy.\n\n");
             return GetDateInput();
         }
 
         internal static long GetDurationInput()
         {
-            Console.WriteLine("Please insert the duration: (Format: hh:mm)");
+            Console.WriteLine("\n\nPlease insert the duration: (Format: hh:mm). Type 0 to return to main manu.\n\n");
             TimeSpan timeSpan;
 
             string durationInput = Console.ReadLine();
+            if (durationInput == "0")
+            {
+                GetUserCommand();
+            }
+
             bool success = TimeSpan.TryParseExact(durationInput, "h\\:mm", CultureInfo.InvariantCulture, out timeSpan);
 
             if (success)
@@ -206,13 +244,13 @@ namespace CodeTracker1
                 long date = parsedDuration.Ticks;
                 if (date < 0)
                 {
-                    Console.WriteLine("Negative Time Not allowed\n\n");
+                    Console.WriteLine("\n\nNegative Time Not allowed.\n\n");
                     GetDurationInput();
                 }
                 return date;
             }
 
-            Console.WriteLine("Not a valid time.");
+            Console.WriteLine("\n\nNot a valid time.\n\n");
             return GetDurationInput();
         }
     }
