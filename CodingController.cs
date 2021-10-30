@@ -92,7 +92,7 @@ namespace CodeTracker1
                 Delete();
             }
 
-            var Id = Int32.Parse(Console.ReadLine());
+            var Id = Int32.Parse(commandInput);
 
             if (Id == 0) GetUserCommand();
           
