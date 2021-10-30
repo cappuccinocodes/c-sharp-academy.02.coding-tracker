@@ -1,4 +1,7 @@
-# CodeTracker1
+# CodeTracker1 
+by Cappuccino Codes 
+https://cappuccinocoding.com/
+
 
 CodeTracker1 is a simple beginner CRUD application designed to log coding time.
 
