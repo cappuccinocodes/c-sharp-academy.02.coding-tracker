@@ -15,6 +15,7 @@ This is an application built as a form of study, so I decided not to use techniq
 
 If you're using this application to study, I have two suggestions:
 
-1 - Expand on the application (for example, with extra reports)
+1 - Expand on the application (for example, with extra reports).
+
 2 - Recreate the application to track different data (for example, a budget application)
 
