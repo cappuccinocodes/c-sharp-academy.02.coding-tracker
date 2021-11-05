@@ -13,49 +13,56 @@ namespace CodeTracker1
         static readonly string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
         internal static void GetUserCommand()
         {
-            Console.WriteLine("\n\nMAIN MENU");
-            Console.WriteLine("\nWhat would you like to do?");
-            Console.WriteLine("\nType 0 to Close Application.");
-            Console.WriteLine("Type 1 to View All Records.");
-            Console.WriteLine("Type 2 to Insert Records.");
-            Console.WriteLine("Type 3 to Delete Records.");
-            Console.WriteLine("Type 4 to Update Records.");
-            Console.WriteLine("Type 5 to Generate Reports.");
-
-            string commandInput = Console.ReadLine();
-
-            if (string.IsNullOrEmpty(commandInput)) {
-                Console.WriteLine("\nInvalid Command. Please choose an option\n");
-                GetUserCommand();
-            }
-
-            int command = Convert.ToInt32(commandInput);
-
-            switch (command)
+            bool closeArea = false;
+            while (closeArea == false)
             {
-                case 0:
-                    Environment.Exit(0);
-                    break;
-                case 1:
-                    Get();
-                    break;
-                case 2:
-                    Post();
-                    break;
-                case 3:
-                    Delete();
-                    break;
-                case 4:
-                    Update();
-                    break;
-                case 5:
-                    Reports.GetReportCommand();
-                    break;
-                default:
-                    Console.WriteLine("\nInvalid Command. Please type a number from 0 to 5.\n");
-                    GetUserCommand();
-                    break;
+                Console.WriteLine("\n\nMAIN MENU");
+                Console.WriteLine("\nWhat would you like to do?");
+                Console.WriteLine("\nType 0 to Close Application.");
+                Console.WriteLine("Type 1 to View All Records.");
+                Console.WriteLine("Type 2 to Insert Records.");
+                Console.WriteLine("Type 3 to Delete Records.");
+                Console.WriteLine("Type 4 to Update Records.");
+                Console.WriteLine("Type 5 to Generate Reports.");
+
+                string commandInput = Console.ReadLine();
+
+                int n;
+
+                if (string.IsNullOrEmpty(commandInput) || !int.TryParse(commandInput, out n))
+                {
+                    Console.WriteLine("\nInvalid Command. Please choose an option\n");
+                    continue;
+                }
+
+                int command = Convert.ToInt32(commandInput);
+
+                switch (command)
+                {
+                    case 0:
+                        closeArea = true;
+                        break;
+                    case 1:
+                        Get();
+                        break;
+                    case 2:
+                        Post();
+                        break;
+                    case 3:
+                        Delete();
+                        break;
+                    case 4:
+                        Update();
+                        break;
+                    case 5:
+                        Reports.GetReportCommand();
+                        break;
+                    default:
+                        Console.WriteLine("\nInvalid Command. Please type a number from 0 to 5.\n");
+                        break;
+                }
             }
+                
         }
 
         internal static void Post()
@@ -103,15 +110,13 @@ namespace CodeTracker1
                 tableCmd.CommandText = $"DELETE from coding WHERE Id = '{Id}'";
                 int rowCount = tableCmd.ExecuteNonQuery();
 
-                while (rowCount == 0)
+                if (rowCount == 0)
                 {
-                    Console.WriteLine($"\n\nRecord with Id {Id} doesn't exist. Try Again or type 0 to return to main menu. \n\n");
-                    Id = Int32.Parse(Console.ReadLine());
-
-                    if (Id == 0) GetUserCommand();
-
-                    if (rowCount != 0) break;
+                    Console.WriteLine($"\n\nRecord with Id {Id} doesn't exist. \n\n");
+                    Delete();
                 }
+
+                Console.WriteLine($"\n\nRecord with Id {Id} was deleted. \n\n");
             }
             GetUserCommand();
         }
