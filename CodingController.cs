@@ -27,6 +27,8 @@ namespace CodeTracker1
 
                 string commandInput = Console.ReadLine();
 
+                int n;
+
                 if (string.IsNullOrEmpty(commandInput) || !int.TryParse(commandInput, out n))
                 {
                     Console.WriteLine("\nInvalid Command. Please choose an option\n");
