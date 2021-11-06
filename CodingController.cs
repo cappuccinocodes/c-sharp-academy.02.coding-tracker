@@ -27,8 +27,6 @@ namespace CodeTracker1
 
                 string commandInput = Console.ReadLine();
 
-                int n;
-
                 if (string.IsNullOrEmpty(commandInput) || !int.TryParse(commandInput, out n))
                 {
                     Console.WriteLine("\nInvalid Command. Please choose an option\n");
@@ -118,6 +116,7 @@ namespace CodeTracker1
 
                 Console.WriteLine($"\n\nRecord with Id {Id} was deleted. \n\n");
             }
+
             GetUserCommand();
         }
 
